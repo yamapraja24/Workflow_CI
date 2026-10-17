@@ -30,8 +30,7 @@ from sklearn.metrics import (
 import mlflow
 
 BASE_DIR = Path(__file__).resolve().parent
-mlflow.set_tracking_uri(f"sqlite:///{(BASE_DIR / 'mlflow.db').as_posix()}")
-mlflow.set_experiment("RF Tuning")
+
 
 
 # In[4]:

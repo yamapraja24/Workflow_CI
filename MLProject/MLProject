@@ -2,4 +2,4 @@ name: EnergyConsumptionTraining
 
 entry_points:
   main:
-    command: "python Modelling.py"
+    command: "python Modelling_Tuning.py"

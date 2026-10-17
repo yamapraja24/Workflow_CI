@@ -143,6 +143,34 @@ with mlflow.start_run():
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
 
+    #Important Feature
+    feature_importance = pd.DataFrame({
+        "feature": X.columns,
+        "importance": best_model.feature_importances_
+    })
+
+    feature_importance.sort_values(
+        by="importance",
+        ascending=False,
+        inplace=True
+    )
+
+    feature_importance.to_csv(
+        "feature_importance.csv",
+        index=False
+    )
+
+    #Hasil Prediksi
+    prediction_results = pd.DataFrame({
+        "actual": y_test,
+        "prediction": y_pred
+    })
+
+    prediction_results.to_csv(
+        "prediction_results.csv",
+        index=False
+    )
+
     # manual logging parameter terbaik
     mlflow.log_params(grid_search.best_params_)
 

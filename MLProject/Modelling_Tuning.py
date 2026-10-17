@@ -153,8 +153,9 @@ with mlflow.start_run():
 
     # simpan model
     mlflow.sklearn.log_model(
-        best_model,
-        artifact_path="model"
+        sk_model=best_model,
+        artifact_path="model",
+        serialization_format="cloudpickle",
     )
 
     print("Best Params:", grid_search.best_params_)

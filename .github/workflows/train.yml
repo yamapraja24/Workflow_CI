@@ -1,30 +1,46 @@
-name: Train Model
+name: CI - Training Model
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - "MLProject/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  MLFLOW_TRACKING_URI: file:${{ github.workspace }}/mlruns
 
 jobs:
   train:
-
     runs-on: ubuntu-latest
-
     steps:
+      - uses: actions/checkout@v4
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-          pip install mlflow pandas numpy scikit-learn
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn mlflow
 
-      - name: Run MLflow Project
+      - name: Jalankan MLflow Project
+        run: mlflow run MLProject --env-manager=local --experiment-name Energy_Consumption
+
+      - name: Upload artefak (cadangan)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlruns
+          path: mlruns
+
+      - name: Simpan artefak ke repositori
         run: |
-          cd MLProject
-          mlflow run .
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add mlruns
+          git diff --staged --quiet || git commit -m "chore: simpan artefak hasil training"
+          git push

@@ -9,6 +9,7 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
+import numpy as np
 
 from pathlib import Path
 
@@ -22,6 +23,10 @@ from sklearn.metrics import (
     mean_squared_error,
     r2_score
 )
+
+import matplotlib
+matplotlib.use("Agg") 
+import matplotlib.pyplot as plt
 
 
 # In[4]:

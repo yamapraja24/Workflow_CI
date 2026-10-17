@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 env:
-  MLFLOW_TRACKING_URI: file:${{ github.workspace }}/mlruns
+  MLFLOW_TRACKING_URI: sqlite:///${{ github.workspace }}/mlflow.db
 
 jobs:
   train:
@@ -34,13 +34,19 @@ jobs:
       - name: Upload artefak (cadangan)
         uses: actions/upload-artifact@v4
         with:
-          name: mlruns
-          path: mlruns
+          name: hasil-training
+          path: |
+            mlflow.db
+            mlruns
+            mlartifacts
+          if-no-files-found: ignore
 
       - name: Simpan artefak ke repositori
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add mlruns
+          for p in mlflow.db mlruns mlartifacts; do
+            [ -e "$p" ] && git add "$p"
+          done
           git diff --staged --quiet || git commit -m "chore: simpan artefak hasil training"
           git push

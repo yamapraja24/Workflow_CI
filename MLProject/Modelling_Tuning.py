@@ -124,7 +124,7 @@ def plot_actual_vs_pred(y_test, y_pred, path="actual_vs_predicted.png"):
 # In[10]:
 
 
-with mlflow.start_run():
+with mlflow.start_run() as run:
 
     rf = RandomForestRegressor(
         random_state=42
@@ -202,6 +202,10 @@ with mlflow.start_run():
     plot_path = plot_actual_vs_pred(y_test, y_pred)
     mlflow.log_artifact(plot_path, artifact_path="plots")
 
+    # tulis ID run untuk dipakai workflow (build-docker)
+    run_id = run.info.run_id
+    (BASE_DIR / "run_id.txt").write_text(run_id)
+    print("RUN_ID:", run_id)
 
 # In[11]:
 
